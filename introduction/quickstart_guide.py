@@ -56,7 +56,7 @@ get_all_tool_names()
 tools = load_tools(["wikipedia", "llm-math"], llm=llm)
 
 # Finally, let's initialize an agent with the tools, the language model, and the type of agent we want to use.
-agent = initialize_agent(
+agent = initialize_agent( 
     tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True
 )
 

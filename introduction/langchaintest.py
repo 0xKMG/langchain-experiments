@@ -1,4 +1,4 @@
-from langchain.document_loaders import YoutubeLoader
+from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
@@ -16,8 +16,8 @@ load_dotenv(find_dotenv())
 embeddings = OpenAIEmbeddings()
 
 
-def create_db_from_youtube_video_url(video_url):
-    loader = YoutubeLoader.from_youtube_url(video_url)
+def create_db_from_pdf(pdf):
+    loader = PyPDFLoader(pdf)
     transcript = loader.load()
 
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
@@ -40,8 +40,8 @@ def get_response_from_query(db, query, k=4):
 
     # Template to use for the system message prompt
     template = """
-        You are a helpful assistant that that can answer questions about youtube videos 
-        based on the video's transcript: {docs}
+        You are a helpful assistant that that can answer questions about a documentation
+        based on the pdf: {docs}
         
         Only use the factual information from the transcript to answer the question.
         
@@ -68,9 +68,9 @@ def get_response_from_query(db, query, k=4):
 
 
 # Example usage:
-video_url = "https://www.youtube.com/watch?v=L_Guz73e6fw"
-db = create_db_from_youtube_video_url(video_url)
+pdf = ".././book.pdf"
+db = create_db_from_pdf(pdf)
 
-query = "What are they saying about AGI?"
+query = "What is Proof of Stake?"
 response, docs = get_response_from_query(db, query)
 print(textwrap.fill(response, width=50))
